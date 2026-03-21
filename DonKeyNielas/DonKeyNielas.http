@@ -1,0 +1,6 @@
+@DonKeyNielas_HostAddress = http://localhost:5262
+
+GET {{DonKeyNielas_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
