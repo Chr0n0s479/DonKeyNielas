@@ -4,7 +4,6 @@ public class MatchDto
 {
     public int Id { get; set; }
 
-    public int MatchWeek { get; set; }
 
     public DateTime MatchDate { get; set; }
 

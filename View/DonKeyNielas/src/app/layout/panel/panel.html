@@ -1,0 +1,44 @@
+<header class="bg-gray-900 text-white">
+
+  <div class="max-w-5xl mx-auto px-4 py-3">
+
+    <!-- fila superior -->
+    <div class="flex justify-between items-center">
+
+      <div class="font-bold text-lg">
+        DonKeyNielas ⚽
+      </div>
+
+      <button (click)="logout()" class="bg-red-500 hover:bg-red-600 text-sm px-3 py-1 rounded">
+        Logout
+      </button>
+
+    </div>
+
+    <!-- navegación -->
+    <nav class="flex justify-center gap-8 mt-3 text-sm">
+
+      <a routerLink="/home" routerLinkActive="text-blue-400 font-semibold" class="hover:text-blue-400">
+        Home
+      </a>
+
+      <a routerLink="/quinielas" routerLinkActive="text-blue-400 font-semibold" class="hover:text-blue-400">
+        Quinielas
+      </a>
+
+      @if(authService.isAdmin()){
+
+      <a routerLink="/admin" routerLinkActive="text-blue-400 font-semibold" class="hover:text-blue-400">
+
+        Admin
+
+      </a>
+
+      }
+
+    </nav>
+
+  </div>
+
+</header>
+<main class="p-6"> <router-outlet></router-outlet> </main>

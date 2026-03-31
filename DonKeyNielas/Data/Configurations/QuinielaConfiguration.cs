@@ -47,6 +47,10 @@ public class QuinielaConfiguration : IEntityTypeConfiguration<Quiniela>
             .HasForeignKey(q => q.ChampionshipId)
             .HasConstraintName("fk_quiniela_championship");
 
+        builder.HasMany(q => q.Forecasts)
+            .WithOne(f => f.Quiniela)
+            .HasForeignKey(f => f.QuinielaId);
+
 
     }
 }

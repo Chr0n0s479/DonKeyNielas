@@ -10,8 +10,8 @@
         public int VisitTeamId { get; set; }
         public Team VisitTeam { get; set; } = null!;
         public DateTime MatchDate { get; set; }
-        public int ScoreHomeTeam { get; set; }
-        public int ScoreVisitTeam { get; set; }
+        public int? ScoreHomeTeam { get; set; }
+        public int? ScoreVisitTeam { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime LastUpdated { get; set; }
 

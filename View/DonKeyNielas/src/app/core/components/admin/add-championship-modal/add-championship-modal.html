@@ -1,0 +1,54 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black/20">
+
+  <div class="bg-white rounded-xl shadow-lg w-[400px] p-6">
+
+    <h2 class="text-xl font-bold mb-4">
+      Crear Torneo
+    </h2>
+
+    <div class="space-y-3">
+
+      <div>
+        <label class="text-sm font-medium">Nombre</label>
+
+        <input
+          [(ngModel)]="name"
+          type="text"
+          class="border p-2 rounded w-full"
+          placeholder="Liga MX Clausura 2026"
+        >
+      </div>
+
+      <div>
+        <label class="text-sm font-medium">Descripción</label>
+
+        <textarea
+          [(ngModel)]="description"
+          class="border p-2 rounded w-full"
+          placeholder="Descripción del torneo"
+        ></textarea>
+      </div>
+
+    </div>
+
+    <div class="flex justify-end gap-2 mt-6">
+
+      <button
+        (click)="close.emit()"
+        class="px-4 py-2 bg-gray-300 rounded"
+      >
+        Cancelar
+      </button>
+
+      <button
+        (click)="save()"
+        class="px-4 py-2 bg-green-600 text-white rounded"
+      >
+        Guardar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

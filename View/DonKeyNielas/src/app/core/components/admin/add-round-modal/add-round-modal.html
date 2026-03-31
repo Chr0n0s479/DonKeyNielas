@@ -1,0 +1,61 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+
+  <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 mx-4 border border-gray-100">
+
+    <div class="flex justify-center border-b border-gray-100 pb-4 mb-5">
+      <h2 class="text-xl font-bold text-gray-800">
+        Registrar Jornada
+      </h2>
+    </div>
+
+        <app-championship-week-selector [matchWeekReadOnly]="matchWeenReadOnly" [championships]="championships" [selectedChampionship]="selectedChampionshipId"
+          [selectedWeek]="selectedWeek" (championshipChanged)="selectedChampionshipId = $event"
+          (weekChanged)="selectedWeek = $event" class="w-full flex justify-center" />
+
+    @if (canAddMatch) {
+
+    <div class="grid grid-cols-2 gap-4 px-4 mb-2">
+      <span class="text-xs font-bold text-gray-600 uppercase tracking-wide">Local</span>
+      <span class="text-xs font-bold text-gray-600 uppercase tracking-wide">Visitante</span>
+    </div>
+
+    <div class="space-y-2 max-h-[40vh] overflow-y-auto px-1">
+      @for (match of matches; track $index) {
+      <div class="relative bg-gray-50/50 p-2 rounded-lg border border-gray-150">
+        <app-add-match-row [teams]="getAvailableTeams(match)" [(homeTeamId)]="match.homeTeamId"
+          [(visitTeamId)]="match.visitTeamId" />
+      </div>
+      }
+    </div>
+
+    <div class="flex justify-end mt-4">
+      @if (matchesCount < 9) { <button (click)="addMatch()"
+        class="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+        </svg>
+        Agregar partido
+        </button>
+        }
+    </div>
+
+    <div class="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100">
+      <button (click)="close.emit()"
+        class="px-5 py-2.5 text-sm font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+        Cancelar
+      </button>
+
+      <button (click)="save()"
+        class="px-5 py-2.5 text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-sm shadow-emerald-200 transition-colors">
+        Guardar
+      </button>
+    </div>
+
+    } @else {
+    <div class="text-center py-6 text-gray-500 font-medium">
+      ⚠️ No se pueden agregar más partidos a este torneo
+    </div>
+    }
+  </div>
+
+</div>

@@ -7,6 +7,6 @@ public class QuinielaForecast
     public Quiniela Quiniela { get; set; } = null!;
     public int MatchId { get; set; }
     public Match Match { get; set; } = null!;   
-    public char Forecast { get; set; }
+    public string Forecast { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
 }

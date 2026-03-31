@@ -1,0 +1,33 @@
+<div class="mt-4 space-y-4">
+
+@if(matches.length){
+
+    <app-match-forecast
+    [readonly]="readonly"
+        [matches]="matches">
+    </app-match-forecast>
+
+    @if(!readonly){
+        
+        <div class="flex justify-center items-center gap-3 mt-8">
+    
+            <button (click)="clearForecasts()"
+                class="w-10 h-10 flex items-center justify-center bg-red-500 hover:bg-gray-300 rounded-full shadow-sm transition"
+                title="Limpiar selección">
+    
+                🧹
+    
+            </button>
+    
+            <button (click)="save()"
+                class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full text-sm font-semibold shadow-md transition">
+                + Crear Quiniela
+            </button>
+    
+        </div>
+    }
+
+
+}
+
+</div>

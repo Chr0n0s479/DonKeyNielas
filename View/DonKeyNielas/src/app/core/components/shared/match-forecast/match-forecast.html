@@ -1,0 +1,67 @@
+<div class="space-y-4">
+
+@for (match of matches; track match.matchId) {
+
+<div class="bg-white rounded-full shadow-md px-6 py-4">
+
+  <div class="grid grid-cols-[1fr_auto_auto_auto_1fr] items-center">
+
+    <!-- HOME -->
+    <div class="flex flex-col items-center">
+      <img [src]="'teams/' + match.homeTeam.imageFile" class="w-10 h-10 mb-1">
+      <span class="text-sm font-medium text-center">
+        {{match.homeTeam.name}}
+      </span>
+    </div>
+
+    <!-- L -->
+    <label class="flex flex-col items-center cursor-pointer mr-5">
+      <input
+        [disabled]="readonly"
+        type="radio"
+        class="mb-1"
+        [name]="'match'+match.matchId"
+        [checked]="match.forecast === MatchForecastEnum.L"
+        (change)="setForecast(match.matchId, MatchForecastEnum.L)">
+      <span class="text-sm font-semibold">L</span>
+    </label>
+
+    <!-- E -->
+    <label class="flex flex-col items-center cursor-pointer mr-5 ">
+      <input
+      [disabled]="readonly"
+        type="radio"
+        class="mb-1"
+        [name]="'match'+match.matchId"
+        [checked]="match.forecast === MatchForecastEnum.E"
+        (change)="setForecast(match.matchId, MatchForecastEnum.E)">
+      <span class="text-sm font-semibold">E</span>
+    </label>
+
+    <!-- V -->
+    <label class="flex flex-col items-center cursor-pointer">
+      <input
+      [disabled]="readonly"
+        type="radio"
+        class="mb-1"
+        [name]="'match'+match.matchId"
+        [checked]="match.forecast === MatchForecastEnum.V"
+        (change)="setForecast(match.matchId, MatchForecastEnum.V)">
+      <span class="text-sm font-semibold">V</span>
+    </label>
+
+    <!-- VISIT -->
+    <div class="flex flex-col items-center">
+      <img [src]="'teams/' + match.visitTeam.imageFile" class="w-10 h-10 mb-1">
+      <span class="text-sm font-medium text-center">
+        {{match.visitTeam.name}}
+      </span>
+    </div>
+
+  </div>
+
+</div>
+
+}
+
+</div>

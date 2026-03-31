@@ -1,10 +1,11 @@
 ﻿namespace DonKeyNielas.DTOs;
 
-public class CreateMatchDto
+public class CreateMatchWeekDto
 {
     public int ChampionshipId { get; set; }
     public int MatchWeek { get; set; }
-    public int HomeTeamId { get; set; }
-    public int VisitTeamId { get; set; }
+
+    public List<MatchTeamsDto> Matches { get; set; }
+    
     public DateTime MatchDate { get; set; }
 }

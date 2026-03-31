@@ -1,20 +1,36 @@
 using DonKeyNielas.Data;
+using DonKeyNielas.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Controllers
-builder.Services.AddControllers();
 
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ChampionshipService>();
+builder.Services.AddScoped<MatchService>();
+builder.Services.AddScoped<QuinielaForecastService>();
+builder.Services.AddScoped<TeamService>();
+builder.Services.AddScoped<QuinielaService>();
+builder.Services.AddScoped<LeaderboardService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services
+.AddControllers()
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
 
 // Database
-builder.Services.AddDbContext<DbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // JWT configuration
 var key = builder.Configuration["Jwt:Key"];
@@ -38,6 +54,16 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -48,8 +74,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
 
+
+// app.UseHttpsRedirection();
+app.UseCors("AllowAngular");
 app.UseAuthentication();  
 app.UseAuthorization();
 

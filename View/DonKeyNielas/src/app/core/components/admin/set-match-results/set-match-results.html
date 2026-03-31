@@ -1,0 +1,51 @@
+@if (match) {
+  <div class="grid grid-cols-5 items-center bg-white rounded-full shadow-md px-6 py-3 gap-2 mb-1">
+
+    <div class="flex items-center justify-end gap-2">
+      <span class="text-sm font-medium text-right truncate">
+        {{ match.homeTeam.name }}
+      </span>
+      <img
+        [src]="'teams/' + match.homeTeam.imageFile"
+        class="w-6 h-6 object-contain flex-shrink-0"
+        [alt]="match.homeTeam.name"
+      />
+    </div>
+
+    <div class="flex justify-center">
+      <input
+        (ngModelChange)="onScoreChanged()"
+        type="number"
+        min="0"
+        [(ngModel)]="match.scoreHomeTeam"
+        class="w-12 text-center border border-gray-300 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+    </div>
+
+    <div class="text-center font-bold text-gray-500 text-sm">
+      VS
+    </div>
+
+    <div class="flex justify-center">
+      <input
+        (ngModelChange)="onScoreChanged()"
+        type="number"
+        min="0"
+        [(ngModel)]="match.scoreVisitTeam"
+        class="w-12 text-center border border-gray-300 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+    </div>
+
+    <div class="flex items-center gap-2">
+      <img
+        [src]="'teams/' + match.visitTeam.imageFile"
+        class="w-6 h-6 object-contain flex-shrink-0"
+        [alt]="match.visitTeam.name"
+      />
+      <span class="text-sm font-medium truncate">
+        {{ match.visitTeam.name }}
+      </span>
+    </div>
+
+  </div>
+}

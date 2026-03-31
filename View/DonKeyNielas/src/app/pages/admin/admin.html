@@ -1,0 +1,32 @@
+<div class="space-y-6 py-4">
+
+    <div class="flex justify-center">
+        <h1 class="text-xl font-bold">
+            Admin Panel
+        </h1>
+
+    </div>
+
+    <app-button-module buttonTitle="Agregar Torneo 🏆" (buttonClick)="openChampionshipModal()"></app-button-module>
+
+    @if(showChampionshipModal){
+    <app-add-championship-modal (close)="showChampionshipModal = false">
+
+    </app-add-championship-modal>
+    }
+
+    <app-button-module buttonTitle="Agregar Jornada 📆" (buttonClick)="openRoundModal()"></app-button-module>
+
+    @if(showRoundModal){
+    <app-add-round-modal (close)="showRoundModal = false">
+    </app-add-round-modal>
+    }
+
+    <app-button-module buttonTitle="Agregar Resultados 💯" (buttonClick)="openResultsModal()"></app-button-module>
+
+    @if(showResultsModal){
+    <app-update-scores-modal (close)="showResultsModal = false">
+    </app-update-scores-modal>
+    }
+
+</div>

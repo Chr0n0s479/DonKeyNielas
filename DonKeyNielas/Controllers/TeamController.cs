@@ -5,11 +5,11 @@ namespace DonKeyNielas.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TeamsController : ControllerBase
+public class TeamController : ControllerBase
 {
     private readonly TeamService _teamsService;
 
-    public TeamsController(TeamService teamService)
+    public TeamController(TeamService teamService)
     {
         _teamsService = teamService;
     }

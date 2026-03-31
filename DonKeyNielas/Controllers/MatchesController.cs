@@ -1,5 +1,6 @@
 ﻿using DonKeyNielas.DTOs;
 using DonKeyNielas.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DonKeyNielas.Controllers;
@@ -35,8 +36,9 @@ public class MatchesController : ControllerBase
         return Ok(result.Data);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
-    public async Task<IActionResult> CreateMatch(CreateMatchDto dto)
+    public async Task<IActionResult> CreateMatch(CreateMatchWeekDto dto)
     {
         var result = await _matchService.CreateMatchAsync(dto);
         if (!result.Success)
@@ -44,6 +46,7 @@ public class MatchesController : ControllerBase
         return Ok(result.Data);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateMatch(int id, UpdateMatchDto dto)
     {
@@ -54,6 +57,7 @@ public class MatchesController : ControllerBase
         return Ok(result.Data);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}/result")]
     public async Task<IActionResult> SetMatchResult(int id, UpdateMatchResultDto dto)
     {
@@ -62,6 +66,18 @@ public class MatchesController : ControllerBase
         var result = await _matchService.SetMatchResult(dto);
         if (!result.Success)
             return BadRequest(result.Message);
+        return Ok(result.Data);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("group-result")]
+    public async Task<IActionResult> SetMatchGroupResult(SetGroupMatchResultDto dto)
+    {
+        var result = await _matchService.SetGroupMatchResult(dto);
+
+        if (!result.Success)
+            return BadRequest(result.Message);
+
         return Ok(result.Data);
     }
 }

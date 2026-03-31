@@ -18,7 +18,7 @@ public class QuinielaForecastService
 
     public async Task<Result<bool>> SaveForecast(int quinielaId, List<ForecastDto> forecasts)
     {
-        List<char> validResults = new List<char> { 'L', 'V', 'E' };
+        List<string> validResults = new List<string> { "L", "V", "E" };
 
         if (quinielaId < 1)
             return Result<bool>.Fail($"Invalid quiniela id {quinielaId}");

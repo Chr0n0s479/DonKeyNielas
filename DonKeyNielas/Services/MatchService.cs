@@ -22,7 +22,6 @@ public class MatchService
             {
                 Id = m.Id,
 
-                MatchWeek = m.MatchWeek,
                 HomeTeamId = m.HomeTeamId,
                 MatchDate = m.MatchDate,
                 HomeTeamName = m.HomeTeam.Name,
@@ -50,7 +49,6 @@ public class MatchService
         {
             Id = m.Id,
 
-            MatchWeek = m.MatchWeek,
             HomeTeamId = m.HomeTeamId,
             MatchDate = m.MatchDate,
             HomeTeamName = m.HomeTeam.Name,
@@ -65,7 +63,7 @@ public class MatchService
         return Result<MatchDto>.Ok(matchDto.FirstOrDefault()!);
     }
 
-    public async Task<Result<int>> CreateMatchAsync(CreateMatchDto dto)
+    public async Task<Result<int>> CreateMatchAsync(CreateMatchWeekDto dto)
     {
         if(dto.ChampionshipId <= 0)
             return Result<int>.Fail("Invalid championship id");
@@ -73,23 +71,43 @@ public class MatchService
         if(_context.Championships.Find(dto.ChampionshipId) == null)
             return Result<int>.Fail($"There is no championship with id {dto.ChampionshipId}");
 
-        if (dto.HomeTeamId == dto.VisitTeamId)
-            return Result<int>.Fail("Home team and visit team cannot be the same");
+        foreach(var _match in dto.Matches)
+        {
+            if(_context.Teams.Find(_match.HomeTeamId) == null)
+                return Result<int>.Fail($"There is no team with id {_match.HomeTeamId}");
+            if(_context.Teams.Find(_match.VisitTeamId) == null)
+                return Result<int>.Fail($"There is no team with id {_match.VisitTeamId}");
+            if (_match.HomeTeamId == _match.VisitTeamId)
+                return Result<int>.Fail("Home team and visit team cannot be the same");
+        }
+
         if(dto.MatchWeek < 1 || dto.MatchWeek > 17)
             return Result<int>.Fail("Match week must be between 1 and 17");
+        var countMatches = _context.Matches.Count(x => x.MatchWeek == dto.MatchWeek && x.ChampionshipId == dto.ChampionshipId);
+        
+        if (countMatches >= 9)
+            return Result<int>.Fail("Cannot be more than 9 matches");
 
+        if(dto.Matches.Count > 9 || dto.Matches.Count < 1)
+            return Result<int>.Fail("Invalid number of matches");
 
-        var match = new Entities.Match
+        foreach(var _match in dto.Matches)
         {
-            MatchWeek = dto.MatchWeek,
-            HomeTeamId = dto.HomeTeamId,
-            VisitTeamId = dto.VisitTeamId,
-            MatchDate = dto.MatchDate,
-            ChampionshipId = dto.ChampionshipId
-        };
-        _context.Matches.Add(match);
+             var match = new Entities.Match
+            {
+                MatchWeek = dto.MatchWeek,
+                HomeTeamId = _match.HomeTeamId,
+                VisitTeamId = _match.VisitTeamId,
+                ChampionshipId = dto.ChampionshipId,
+                ScoreHomeTeam = 0,
+                ScoreVisitTeam = 0,
+                CreatedAt = DateTime.UtcNow,
+             };
+            _context.Matches.Add(match);
+        }
         await _context.SaveChangesAsync();
-        return Result<int>.Ok(match.Id);
+
+        return Result<int>.Ok(_context.Matches.Count(x => x.Id == dto.ChampionshipId));
     }
 
     public async Task<Result<bool>> UpdateMatchAsync(UpdateMatchDto dto)
@@ -149,6 +167,47 @@ public class MatchService
         await _context.SaveChangesAsync();
         return Result<bool>.Ok(true);
 
+    }
+    public async Task<Result<bool>> SetGroupMatchResult(SetGroupMatchResultDto dto)
+    {
+        if (dto.Matches == null || !dto.Matches.Any())
+            return Result<bool>.Fail("Matches cannot be empty");
+
+        if (dto.Matches.Any(m => m.MatchId <= 0))
+            return Result<bool>.Fail("Invalid match ids");
+
+        if (dto.Matches.Any(m => m.HomeScore < 0 || m.VisitScore < 0))
+            return Result<bool>.Fail("Scores cannot be negative");
+
+        if (dto.Matches.Select(m => m.MatchId).Distinct().Count() != dto.Matches.Count)
+            return Result<bool>.Fail("Duplicate match ids");
+
+        var dtoMatchIds = dto.Matches.Select(m => m.MatchId).ToList();
+
+        var matches = await _context.Matches
+            .Where(m =>
+                dtoMatchIds.Contains(m.Id) &&
+                m.ChampionshipId == dto.ChampionshipId &&
+                m.MatchWeek == dto.MatchWeek)
+            .ToListAsync();
+
+        if (matches.Count != dtoMatchIds.Count)
+            return Result<bool>.Fail("Some match ids are invalid");
+
+        var dtoMatchesDict = dto.Matches.ToDictionary(m => m.MatchId);
+
+        foreach (var match in matches)
+        {
+            var dtoMatch = dtoMatchesDict[match.Id];
+
+            match.ScoreHomeTeam = dtoMatch.HomeScore;
+            match.ScoreVisitTeam = dtoMatch.VisitScore;
+            match.LastUpdated = DateTime.UtcNow;
+        }
+
+        await _context.SaveChangesAsync();
+
+        return Result<bool>.Ok(true);
     }
 
 

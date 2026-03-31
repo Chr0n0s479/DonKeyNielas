@@ -26,6 +26,33 @@ public class ChampionshipService
         return Result<List<ChampionshipDto>>.Ok(championships);
 
     }
+    public async Task<Result<ChampionshipMatchWeekDto>> GetLatestChampionshipMatchWeek(int? championshipId = null)
+    {
+        var championship = default(Entities.Championship);
+
+        if (championshipId == null)
+        {
+            championship = await _context.Championships.OrderByDescending(c => c.Id).FirstOrDefaultAsync();
+        } else
+        {
+            championship = await _context.Championships.Where(c => c.Id == championshipId).FirstAsync();
+        }
+
+        if (championship == null)
+            return Result<ChampionshipMatchWeekDto>.Fail("Championship not found");
+
+        var latestMatch = await _context.Matches.Where(m => m.ChampionshipId == championship.Id).OrderByDescending(m => m.Id)
+            .FirstOrDefaultAsync();
+        var championshipConfig = new ChampionshipMatchWeekDto
+        {
+            ChampionshipId = championship.Id,
+            ChampionshipName = championship.Name,
+            MatchWeek = latestMatch != null ? latestMatch.MatchWeek : 1
+        };
+
+        return Result<ChampionshipMatchWeekDto>.Ok(championshipConfig);
+
+    }
 
     public async Task<Result<ChampionshipDto>> GetChampionshipById(int championshipId)
     {
@@ -42,10 +69,13 @@ public class ChampionshipService
         return Result<ChampionshipDto>.Ok(championship);
     }
 
-    public async Task<Result<bool>> CreateChampionship(ChampionshipDto championship)
+    public async Task<Result<bool>> CreateChampionship( ChampionshipDto championship)
     {
         if(string.IsNullOrWhiteSpace(championship.Name))
             return  Result<bool>.Fail("Championship name cannot be empty");
+
+        if(await _context.Championships.AnyAsync(c => c.Name.ToLower() == championship.Name.ToLower()))
+            return Result<bool>.Fail($"There is already a championship with name {championship.Name}");
 
         _context.Championships.Add(new Entities.Championship
         {

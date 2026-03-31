@@ -50,18 +50,19 @@ public class AuthService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<Result<string>> Login(string username, string password)
+    public async Task<Result<string>> Login(LoginDto dto)
     {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
             return Result<string>.Fail("Invalid username or password");
 
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.UserName == username && u.Available);
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(u => u.Email.ToLower() == dto.Email.ToLower() && u.Available);
 
         if (user == null)
             return Result<string>.Fail("Invalid username or password");
 
-        bool validPassword = BCrypt.Net.BCrypt.Verify(password, user.Password);
+        bool validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, user.Password);
 
         if (!validPassword)
             return Result<string>.Fail("Invalid username or password");

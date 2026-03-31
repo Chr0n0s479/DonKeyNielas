@@ -1,0 +1,48 @@
+<div class="flex justify-center mb-6 w-full">
+    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 w-full">
+
+        <div class="flex gap-4 items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+
+            <div class="flex flex-col flex-1 min-w-[200px]">
+
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-1.5">
+                    Torneo
+                </label>
+
+                <div class="relative">
+                    <select [(ngModel)]="selectedChampionship" (ngModelChange)="onChampionshipChange($event)"
+                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 cursor-pointer transition-colors duration-200">
+                        <option [ngValue]="null" disabled>Seleccionar torneo</option>
+
+                        @for (championship of championships; track championship.id) {
+                        <option [ngValue]="championship.id">
+                            {{ championship.name }}
+                        </option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="flex flex-col w-24">
+
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-1.5">
+                    J
+                </label>
+
+                <div class="relative">
+                    <select [(ngModel)]="selectedWeek" (ngModelChange)="onWeekChange($event)" [disabled]="matchWeekReadOnly"
+                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 cursor-pointer text-center font-medium transition-colors duration-200">
+                        @for (week of weeks; track $index) {
+                        <option [value]="week">
+                            {{ week }}
+                        </option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

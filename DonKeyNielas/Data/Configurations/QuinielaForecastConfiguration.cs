@@ -34,7 +34,7 @@ public class QuinielaForecastConfiguration : IEntityTypeConfiguration<QuinielaFo
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasOne(qf => qf.Quiniela)
-            .WithMany()
+            .WithMany(q => q.Forecasts)
             .HasForeignKey(qf => qf.QuinielaId)
             .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_quiniela_forecast_quiniela");
@@ -48,6 +48,8 @@ public class QuinielaForecastConfiguration : IEntityTypeConfiguration<QuinielaFo
         builder.HasIndex(qf => new { qf.QuinielaId, qf.MatchId })
             .IsUnique()
             .HasDatabaseName("uq_quiniela_forecast_match");
+
+
 
     }
 }

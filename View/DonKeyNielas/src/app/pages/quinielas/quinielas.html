@@ -1,0 +1,24 @@
+<div class="bg-white p-4 rounded shadow">
+
+    <h1 class="text-xl font-bold text-center">
+        Mi Quiniela
+    </h1>
+    <div class="flex justify-center mt-3">
+
+
+
+<app-championship-week-selector 
+    [championships]="championships" 
+    [selectedChampionship]="selectedChampionshipId"
+    [selectedWeek]="selectedWeek" 
+    (championshipChanged)="onChampionshipChange($event)"
+    (weekChanged)="onWeekChange($event)">
+</app-championship-week-selector>
+</div>
+
+
+
+    <app-create-quiniela [readonly]="hasQuiniela" [championshipId]="selectedChampionshipId" [matchWeek]="selectedWeek"
+        [matches]="matches"></app-create-quiniela>
+
+</div>

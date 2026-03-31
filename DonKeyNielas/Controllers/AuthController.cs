@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DonKeyNielas.Common;
+using DonKeyNielas.DTOs;
+using DonKeyNielas.Services;
+using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 
 namespace DonKeyNielas.Controllers;
@@ -7,23 +10,38 @@ namespace DonKeyNielas.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    [HttpPost("login")]
-    public IActionResult Login(string username, string password)
+    private readonly AuthService _authService;
+    public AuthController(AuthService authService)
     {
-        // Aquí deberías implementar la lógica de autenticación real
-        if (username == "admin" && password == "password")
+        _authService = authService;
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _authService.Login(dto);
+
+        if (!result.Success)
+            return Unauthorized(result.Message);
+
+        return Ok(new AuthResponseDto
         {
-            // Generar un token JWT o similar aquí
-            return Ok(new { Token = "fake-jwt-token" });
-        }
-        return Unauthorized();
+            Token = result.Data
+        });
     }
 
     [HttpPost("register")]
-    public IActionResult Register(string username, string password, string fullname, string email, string inviteCode)
+    public async Task<IActionResult> Register([FromBody] CreateUserDto dto)
     {
-        // Aquí deberías implementar la lógica de registro real
-        // Por ejemplo, guardar el usuario en la base de datos
-        return Ok(new { Message = "User registered successfully" });
+
+        var result = await _authService.RegisterUser(dto);
+
+        if (!result.Success)
+            return BadRequest(result.Message);
+
+        return Ok(result.Data);
     }
 }

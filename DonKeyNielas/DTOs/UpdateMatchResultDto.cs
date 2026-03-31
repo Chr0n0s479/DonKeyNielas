@@ -3,6 +3,6 @@
 public class UpdateMatchResultDto
 {
     public int MatchId { get; set; }
-    public char HomeScore { get; set; }
-    public char VisitScore { get; set; }
+    public int HomeScore { get; set; }
+    public int VisitScore { get; set; }
 }

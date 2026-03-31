@@ -1,0 +1,53 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black/20">
+    
+
+  <div class="bg-white rounded-xl shadow-lg max-w-3xl w-full p-6 max-h-[80vh] overflow-y-auto">
+
+    <h2 class="text-xl font-semibold mb-6">
+      Actualizar Resultados
+    </h2>
+
+        <app-championship-week-selector
+        [championships]="championships"
+        [selectedChampionship]="selectedChampionshipId"
+        [selectedWeek]="selectedWeek"
+        (championshipChanged)="selectedChampionshipId = $event"
+        (weekChanged)="onChangedWeek($event)"
+        />
+
+    <div class="flex justify-center mb-4">
+      
+    </div>
+
+    <!-- partidos -->
+        @for (match of matches; track match.id) {
+            <app-set-match-results
+            [match]="match"
+            (scoreChanged)="updateScoreMatch($event, match.id)">
+
+            </app-set-match-results>
+        }
+ 
+    <!-- botones -->
+
+    <div class="flex justify-end gap-3 mt-8">
+
+      <button
+        (click)="close.emit()"
+        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md"
+      >
+        Cancelar
+      </button>
+
+      <button
+        (click)="save()"
+        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
+      >
+        Guardar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
